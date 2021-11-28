@@ -35,7 +35,7 @@ func main() {
 
 	filename = flag.Args()[0]
 	if lang == "pip" {
-		resolver = NewPythonLookup(verbose)
+		resolver = NewPipLookup(verbose)
 	} else if lang == "npm" {
 		resolver = NewNPMLookup(verbose)
 	} else if lang == "composer" {

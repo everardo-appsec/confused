@@ -7,21 +7,21 @@ import (
 	"strings"
 )
 
-// PythonLookup represents a collection of python packages to be tested for dependency confusion.
-type PythonLookup struct {
+// PipLookup represents a collection of python packages to be tested for dependency confusion.
+type PipLookup struct {
 	Packages []string
 	Verbose  bool
 }
 
-// NewPythonLookup constructs a `PythonLookup` struct and returns it
-func NewPythonLookup(verbose bool) PackageResolver {
-	return &PythonLookup{Packages: []string{}, Verbose: verbose}
+// NewPipLookup constructs a `PipLookup` struct and returns it
+func NewPipLookup(verbose bool) PackageResolver {
+	return &PipLookup{Packages: []string{}, Verbose: verbose}
 }
 
 // ReadPackagesFromFile reads package information from a python `requirements.txt` file
 //
 // Returns any errors encountered
-func (p *PythonLookup) ReadPackagesFromFile(filename string) error {
+func (p *PipLookup) ReadPackagesFromFile(filename string) error {
 	rawfile, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (p *PythonLookup) ReadPackagesFromFile(filename string) error {
 // PackagesNotInPublic determines if a python package does not exist in the pypi package repository.
 //
 // Returns a slice of strings with any python packages not in the pypi package repository
-func (p *PythonLookup) PackagesNotInPublic() []string {
+func (p *PipLookup) PackagesNotInPublic() []string {
 	notavail := []string{}
 	for _, pkg := range p.Packages {
 		if !p.isAvailableInPublic(pkg) {
@@ -63,7 +63,7 @@ func (p *PythonLookup) PackagesNotInPublic() []string {
 	return notavail
 }
 
-func (p *PythonLookup) pipSplit(r rune) bool {
+func (p *PipLookup) pipSplit(r rune) bool {
 	delims := []rune{
 		'=',
 		'<',
@@ -80,7 +80,7 @@ func (p *PythonLookup) pipSplit(r rune) bool {
 // isAvailableInPublic determines if a python package exists in the pypi package repository.
 //
 // Returns true if the package exists in the pypi package repository.
-func (p *PythonLookup) isAvailableInPublic(pkgname string) bool {
+func (p *PipLookup) isAvailableInPublic(pkgname string) bool {
 	if p.Verbose {
 		fmt.Print("Checking: https://pypi.org/project/" + pkgname + "/ : ")
 	}
